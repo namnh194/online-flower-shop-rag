@@ -21,7 +21,7 @@ import uuid  # Import the uuid module to generate unique IDs
 session_id = str(uuid.uuid4())  # Creates a random UUID and converts it to a string
 
 # URL of the Flask API
-st.session_state.flask_api_url = "http://localhost:5000/api/v1/chat"
+st.session_state.flask_api_url = "http://127.0.0.1:5000/api/v1/chat"
 
 # Initialize chat history in session state
 if "chat_history" not in st.session_state:
@@ -31,18 +31,23 @@ if "chat_history" not in st.session_state:
 # Display the chat history using chat UI
 for message in st.session_state.chat_history:
     with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+        # st.markdown(message["content"])
+        st.markdown(message["parts"])
 
 # Accept user input
 if prompt := st.chat_input("Bạn có cần tư vấn sản phẩm gì hôm nay không?"):
     # Add user message to chat history
-    st.session_state.chat_history.append({"role": "user", "content": prompt})
+    # st.session_state.chat_history.append({"role": "user", "content": prompt})
+    st.session_state.chat_history.append({"role": "user", "parts": prompt})
+
     # Display user message in chat message container
     with st.chat_message("user"):
         st.markdown(prompt)
     # Display assistant response in chat message container
     # Prepare the payload for the request
-    with st.chat_message("assistant"):
+    
+    # with st.chat_message("assistant"):
+    with st.chat_message("ai"):
         payload = {
             "query": prompt,
             "session_id": session_id
@@ -56,10 +61,7 @@ if prompt := st.chat_input("Bạn có cần tư vấn sản phẩm gì hôm nay 
             api_response = response.json()
             # Add the assistant's response to the chat history
             st.markdown(api_response['content'])
-            st.session_state.chat_history.append({"role": "assistant", "content": api_response['content']})
+            # st.session_state.chat_history.append({"role": "assistant", "content": api_response['content']})
+            st.session_state.chat_history.append({"role": "ai", "parts": api_response['content']})
         else:
             st.error(f"Error: {response.status_code}")
-
-
-
-   

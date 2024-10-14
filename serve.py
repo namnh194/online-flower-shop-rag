@@ -5,7 +5,7 @@ from gemini_client import GeminiClient
 from rag.core import RAG
 from semantic_router import SemanticRouter, Route
 from semantic_router.samples import productSample, chitchatSample
-from reflection.core import Reflection
+from reflection.core import Reflection, ReflectionGemini
 from semantic_cache.core import SemanticCache
 from embedding_model.core import EmbeddingModel
 
@@ -13,9 +13,8 @@ import os
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
-os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
-api_key = os.getenv('OPENAI_API_KEY')
-os.environ["GEMINI_API_KEY"] = os.getenv('GEMINI_API_KEY')
+# os.environ["OPENAI_API_KEY"] = os.getenv('OPENAI_API_KEY')
+# api_key = os.getenv('OPENAI_API_KEY')
 gemini_api_key = os.getenv('GEMINI_API_KEY')
 mongo_uri = os.getenv('MONGO_URI')
 db_name = os.getenv('DB_NAME')
@@ -54,7 +53,7 @@ chitchatRoute = Route(name=CHITCHAT_ROUTE_NAME, samples=chitchatSample)
 semanticRouter = SemanticRouter(routes=[productRoute, chitchatRoute])
 
 # Setup Reflection
-reflection = Reflection(
+reflection = ReflectionGemini(
     llm=llm,
     mongodbUri=mongo_uri,
     dbName=db_name,
